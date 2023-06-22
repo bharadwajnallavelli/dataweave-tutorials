@@ -1,0 +1,110 @@
+input json:
+{ "name"   : "John Smith",
+  "sku"    : "20223",
+  "price"  : 23.95,
+  "shipTo" : { "name" : "Jane Smith",
+               "address" : "123 Maple Street",
+               "city" : "Pretendville",
+               "state" : "NY",
+               "zip"   : "12345" },
+  "billTo" : { "name" : "John Smith",
+               "address" : "123 Maple Street",
+               "city" : "Pretendville",
+               "state" : "NY",
+               "zip"   : "12345" }
+}
+
+--------------------------------------------------------------
+Example 1: JSON (function, variables, concat)
+%dw 2.0
+output application/json
+var company = "DTV"
+fun tax(state) = {
+    tax: if(state=="NY") 1.25 else 1.0
+}
+---
+payload ++ tax(payload.shipTo.state)
+
+--------------------------------------------------------------
+Example 2: JSON to XML (function, variables, concat)
+%dw 2.0
+output application/xml
+var company = "DTV"
+fun tax(state) = {
+    tax: if(state=="NY") 1.25 else 1.0
+}
+---
+details : payload ++ tax(payload.shipTo.state)
+
+--------------------------------------------------------------
+Example 3: JSON to XML (namespace)
+%dw 2.0
+ns ns1 https://example.com
+ns ns2 https://tomasyer.com
+output application/xml  
+---
+
+  ns1#details: payload
+  
+--------------------------------------------------------------
+input JSON 2:
+{
+  "data": [{
+    "type": "articles",
+    "id": "1",
+    "attributes": {
+      "title": "JSON:API paints my bikeshed!",
+      "body": "The shortest article. Ever."
+    },
+    "relationships": {
+      "author": {
+        "data": {"id": "42", "type": "people"}
+      }
+    }
+  }],
+  "included": [
+    {
+      "type": "people",
+      "id": "42",
+      "attributes": {
+        "name": "John"
+      }
+    }
+  ]
+}
+
+--------------------------------------------------------------
+Example 4: JSON to JSON (Keeping only specific fields)
+%dw 2.0
+output application/json  
+---
+{
+    responsedata: {
+        id: payload.data.id,
+        attributes: {
+            newtitle: payload.data[0].attributes.title ++ payload.data[0].attributes.body
+        }
+    },
+    included: {
+        name: "Mr " ++ payload.included[0].attributes.name
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

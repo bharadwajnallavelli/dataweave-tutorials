@@ -90,12 +90,122 @@ output application/json
     }
 }
 
+--------------------------------------------------------------
+valid variable names:
+1. starts with alphabet
+2. only _ is allowed
+3. no reserved keywords
 
+--------------------------------------------------------------
+/*
+multi line comments
+*/
+// single line comments
 
+--------------------------------------------------------------
+Escape special character using \
+%dw 2.0
+output application/json
+---
+{
+    dollarsign : "dollar{\$\$}",
+    backtick : "backtick{`}",
+    singlequote: 'single{\'}'
+}
 
+%dw 2.0
+output application/xml
+---
+xmlexample:
+{
+    dollarsign : "dollar{\$\$}",
+    backtick : "backtick{`}",
+    singlequote: 'single{\'}'
+}
 
+--------------------------------------------------------------
+Dataweave selectors: Traverse the structures of objects and arrays and return matching values.
+input:
+{
+    "message": "Hello world!",
+    "name": "Bharadwaj"
+}
+1. single value selector
 
+%dw 2.0
+output application/json
+---
+{
+    "status": payload.message,
+    "username": payload.name
+}
 
+2. multi value selectors
+input:
+{
+    "users": [
+        {
+        "name": "A"
+    },
+     {
+        "name": "B"
+    },
+    {
+        "name": "C"
+    }
+    ]
+}
+
+input:
+{
+    "users": [
+        {
+        "name": "A"
+    },
+     {
+        "name": "B"
+    },
+    {
+        "name": "C",
+        "name": "D"
+    }
+    ]
+}
+
+%dw 2.0
+output application/json
+---
+payload.users.*name
+
+%dw 2.0
+output application/json
+---
+// decendents
+payload..name
+
+input:
+{
+    "ref": "name",
+    "name": "Bob",
+    "age": 23
+}
+
+%dw 2.0
+output application/json
+---
+// dynamic selector
+payload[payload.ref]
+
+%dw 2.0
+output application/json
+---
+// keyvalue in output
+payload.&ref
+
+//output: 
+{
+  "ref": "name"
+}
 
 
 

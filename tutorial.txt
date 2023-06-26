@@ -207,6 +207,54 @@ payload.&ref
   "ref": "name"
 }
 
+//input:
+[{
+    "ref": "name",
+    "name": "Bob",
+    "age": 23
+},
+{
+    "ref": "name1",
+    "name": "Bob2",
+    "age": 24
+},
+{
+    "ref": "name3",
+    "name": "Bob4",
+    "age": 29
+}]
+//script:
+%dw 2.0
+output application/json
+---
+// index
+payload[0]
+//output:
+{
+  "ref": "name",
+  "name": "Bob",
+  "age": 23
+}
+
+//script:
+%dw 2.0
+output application/json
+---
+// index
+payload[0 to 1]
+//output:
+[
+  {
+    "ref": "name",
+    "name": "Bob",
+    "age": 23
+  },
+  {
+    "ref": "name1",
+    "name": "Bob2",
+    "age": 24
+  }
+]
 
 
 
